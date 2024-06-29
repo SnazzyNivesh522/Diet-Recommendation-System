@@ -146,12 +146,12 @@ def profile():
         gender = request.form['inputGender']
         activity = request.form['activity']
         weight_loss_plan = request.form['weightGoal']
-        meals_per_day = int(request.form['meals'])
+        meals_per_day = int(request.form['meals'].split('-')[0])
         diet_type = "vegetarian"  # This should come from user input as well if needed
 
         json_data = diet_recommendation_model.response_generator(age, weight, height, gender, activity, weight_loss_plan, meals_per_day, diet_type)
         print(json_data["BMI"])
-        render_template('dashboard.html', meal1=json_data["Meal_Recommendations"]["Meal_1"], meal2=json_data["Meal_Recommendations"]["Meal_2"], meal3=json_data["Meal_Recommendations"]["Meal_3"], explanation=json_data["Explanation"])
+        return render_template('dashboard.html', meal1=json_data["Meal_Recommendations"]["Meal_1"], meal2=json_data["Meal_Recommendations"]["Meal_2"], meal3=json_data["Meal_Recommendations"]["Meal_3"], explanation=json_data["Explanation"])
     return render_template('profile.html')
 
 def admin_required(f):
