@@ -7,6 +7,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from datetime import datetime
 from functools import wraps
+import diet_recommendation_model 
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -135,9 +136,22 @@ def dashboard():
     explanation = "These meals are designed to provide a balanced diet with a mix of protein, carbohydrates, and vegetables."
 
     return render_template('dashboard.html', meal1=meal1, meal2=meal2, meal3=meal3, explanation=explanation)
-@app.route("/profile")
+@app.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
+    if request.method == 'POST':
+        age = int(request.form['inputAge'])
+        weight = int(request.form['inputWeight'])
+        height = int(request.form['inputHeight'])
+        gender = request.form['inputGender']
+        activity = request.form['activity']
+        weight_loss_plan = request.form['weightGoal']
+        meals_per_day = int(request.form['meals'])
+        diet_type = "vegetarian"  # This should come from user input as well if needed
+
+        json_data = diet_recommendation_model.response_generator(age, weight, height, gender, activity, weight_loss_plan, meals_per_day, diet_type)
+        print(json_data["BMI"])
+        render_template('dashboard.html', meal1=json_data["Meal_Recommendations"]["Meal_1"], meal2=json_data["Meal_Recommendations"]["Meal_2"], meal3=json_data["Meal_Recommendations"]["Meal_3"], explanation=json_data["Explanation"])
     return render_template('profile.html')
 
 def admin_required(f):

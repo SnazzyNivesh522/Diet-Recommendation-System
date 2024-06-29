@@ -10,8 +10,8 @@
     <img src="{{ url_for('static', filename='logo1.jpeg') }}" alt="logo1" />
   </div>
   <div class="home-button-div">
-    <button class="home-button">Login</button>
-    <button class="home-button">Sign Up</button>
+    <button class="home-button"><a href="{{ url_for('login') }}" style="text-decoration: none">Login</a></button>
+    <button class="home-button"><a href="{{ url_for('register') }}" style="text-decoration: none">Register</a></button>
   </div>
 </div>
 <!-- </div> -->
