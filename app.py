@@ -96,11 +96,49 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+def get_meals_data():
+    # Replace this with actual data retrieval logic
+    meals = {
+        'Meal_1': {
+            'Food_Items': ['Oatmeal with berries and nuts (1/2 cup rolled oats, 1/4 cup berries, 1/4 cup nuts), 1/2 cup almond milk',
+                           '1 cup mixed greens salad with vinaigrette dressing (1 cup mixed greens, 2 tbsp vinaigrette)'],
+            'Nutritional_Values': {'FatContent': '14g', 'SaturatedFatContent': '3g', 'CholesterolContent': '0mg',
+                                   'SodiumContent': '200mg', 'CarbohydrateContent': '45g', 'FiberContent': '8g',
+                                   'SugarContent': '10g', 'ProteinContent': '15g'},
+            'Calories': 400
+        },
+        'Meal_2': {
+            'Food_Items': ['Lentil soup with whole-wheat bread (1 cup lentil soup, 2 slices whole-wheat bread)',
+                           '1 apple'],
+            'Nutritional_Values': {'FatContent': '5g', 'SaturatedFatContent': '1g', 'CholesterolContent': '0mg',
+                                   'SodiumContent': '300mg', 'CarbohydrateContent': '50g', 'FiberContent': '12g',
+                                   'SugarContent': '10g', 'ProteinContent': '18g'},
+            'Calories': 400
+        },
+        'Meal_3': {
+            'Food_Items': ['Tofu and vegetable stir-fry with brown rice (1/2 cup tofu, 1 cup vegetables, 1/2 cup brown rice)',
+                           '1 cup mixed greens salad with vinaigrette dressing (1 cup mixed greens, 2 tbsp vinaigrette)'],
+            'Nutritional_Values': {'FatContent': '10g', 'SaturatedFatContent': '2g', 'CholesterolContent': '0mg',
+                                   'SodiumContent': '250mg', 'CarbohydrateContent': '55g', 'FiberContent': '10g',
+                                   'SugarContent': '5g', 'ProteinContent': '20g'},
+            'Calories': 450
+        }
+    }
+    return meals
 
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template('dashboard.html', title='Dashboard')
+    meal1 = "Grilled Chicken Salad"
+    meal2 = "Quinoa and Veggie Stir Fry"
+    meal3 = "Spaghetti with Marinara Sauce"
+    explanation = "These meals are designed to provide a balanced diet with a mix of protein, carbohydrates, and vegetables."
+
+    return render_template('dashboard.html', meal1=meal1, meal2=meal2, meal3=meal3, explanation=explanation)
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template('profile.html')
 
 def admin_required(f):
     @wraps(f)

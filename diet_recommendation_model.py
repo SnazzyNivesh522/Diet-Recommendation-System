@@ -10,9 +10,9 @@ https://ai.google.dev/gemini-api/docs/get-started/python
 import os
 
 import google.generativeai as genai
-from dotenv import load_dotenv
 
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
+from dotenv import load_dotenv
 load_dotenv()
 
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
@@ -32,7 +32,7 @@ model = genai.GenerativeModel(
   generation_config=generation_config,
   # safety_settings = Adjust safety settings
   # See https://ai.google.dev/gemini-api/docs/safety-settings
-  system_instruction="You are diet recommendation system .  You have to provide recommendation based on the the input i provide . Inputs are Age , Height , Weight , Gender , Activity , Weight loss plan and Meals per day , Diet type . Here Activity will be in {Little/No Exercise , Little Exercise , Moderate Exercise(3 to 5 days) , Very active(6-7 days) , Extra Active (very active and physical Job) . For weight loss plan type will be Maintain Weight , Mild Weight Loss , Weight Loss , Extreme weight loss . Meal per day can be 3 to 5 . Based on this input you will output of \nBody Mass Index (BMI) (kg / m^2) and tell whether it is Normal or Obese . Based on the weight loss plan you use Calories Calculator which shows Calorie Intake per day. Based on the Meals per day show recommendation of foods and intake . Diet type can be vegetarian or non-vegetarian . You will also show the nutritional value of it Calories . Nutritional values will include FatContent , SaturatedFatContent , CholesterolContent , SodiumContent , CarbohydrateConten , FiberContent , SugarContent , ProteinContent .The output should be in json format . Make sure to recommend new diet every time this is very important ",
+  system_instruction="You are diet recommendation system .  You have to provide recommendation based on the the input i provide . Inputs are Age , Height , Weight , Gender , Activity , Weight loss plan and Meals per day , Diet type . Here Activity will be in {Little/No Exercise , Little Exercise , Moderate Exercise(3 to 5 days) , Very active(6-7 days) , Extra Active (very active and physical Job) . For weight loss plan type will be Maintain Weight , Mild Weight Loss , Weight Loss , Extreme weight loss . Meal per day can be 3 to 5 . Based on this input you will output of \nBody Mass Index (BMI) (kg / m^2) and tell whether it is Normal or Obese . Based on the weight loss plan you use Calories Calculator which shows Calorie Intake per day. Based on the Meals per day show recommendation of foods and intake . Diet type can be vegetarian or non-vegetarian . You will also show the nutritional value of it Calories . Nutritional values will include FatContent , SaturatedFatContent , CholesterolContent , SodiumContent , CarbohydrateConten , FiberContent , SugarContent , ProteinContent .The output should be in json format and Important note : Nutritional Values should be string format not in numerical . Make sure to recommend new diet every time this is very important .",
 )
 
 chat_session = model.start_chat(
@@ -148,25 +148,81 @@ def extract_content_from_response(response_text):
 
     return extracted_content
 
-age = 20
-weight = 75
-height = 170
-gender = "female"
-activity = "Moderate Exercise"
-weight_loss_plan = "Weight Loss"
-meals_per_day = 3
-diet_type = "vegeterain"
+# age = 20
+# weight = 75
+# height = 170
+# gender = "female"
+# activity = "Moderate Exercise"
+# weight_loss_plan = "Weight Loss"
+# meals_per_day = 3
+# diet_type = "vegeterain"
 
-def recommendation_response():
+# def recommendation_response():
+#     input = f"Age {age} , Weight(kg) {weight} , Height(cm) {height} , Gender {gender} , Activity {activity} , Weight Loss Plan {weight_loss_plan} , Meals Per Day {meals_per_day} , Diet Type {diet_type} new diet"
+#     response = chat_session.send_message(input)
+#     print(response.text + "\n\n\n\n\n\n\n\n")
+#     print(extract_content_from_response(response_text = response.text))
+
+# input = f"Age {age} , Weight(kg) {weight} , Height(cm) {height} , Gender {gender} , Activity {activity} , Weight Loss Plan {weight_loss_plan} , Meals Per Day {meals_per_day} , Diet Type {diet_type} new diet"
+# response = chat_session.send_message(input)
+# print(extract_content_from_response(response_text = response.text))
+
+model2 = genai.GenerativeModel(
+  model_name="gemini-1.5-flash",
+  generation_config=generation_config,
+  # safety_settings = Adjust safety settings
+  # See https://ai.google.dev/gemini-api/docs/safety-settings
+  system_instruction="You have to validate the json in the format that i provide ",
+)
+
+chat_session2 = model2.start_chat(
+  history=[
+    {
+      "role": "user",
+      "parts": [
+        "{\n  \"BMI\": 25.95,\n  \"BMI_Category\": \"Overweight\",\n  \"Calories_Calculator\": {\n    \"Calorie_Intake_per_day\": 1600\n  },\n  \"Meal_Recommendations\": {\n    \"Meal_1\": {\n      \"Food_Items\": [\n        \"Overnight oats with chia seeds and berries (1/2 cup rolled oats, 1/4 cup chia seeds, 1/2 cup berries, 1/2 cup almond milk)\",\n        \"1 slice whole-wheat toast with avocado (1 slice whole-wheat toast, 1/4 avocado)\"\n      ],\n      \"Nutritional_Values\": {\n        \"FatContent\": 12g,\n        \"SaturatedFatContent\": 3g,\n        \"CholesterolContent\": 0mg,\n        \"SodiumContent\": 150mg,\n        \"CarbohydrateContent\": 40g,\n        \"FiberContent\": 8g,\n        \"SugarContent\": 10g,\n        \"ProteinContent\": 12g\n      },\n      \"Calories\": 350\n    },\n    \"Meal_2\": {\n      \"Food_Items\": [\n        \"Lentil soup with whole-wheat bread (1 cup lentil soup, 1 slice whole-wheat bread)\",\n        \"Mixed greens salad with vinaigrette dressing (1 cup mixed greens, 2 tbsp vinaigrette dressing)\"\n      ],\n      \"Nutritional_Values\": {\n        \"FatContent\": 8g,\n        \"SaturatedFatContent\": 1g,\n        \"CholesterolContent\": 0mg,\n        \"SodiumContent\": 300mg,\n        \"CarbohydrateContent\": 45g,\n        \"FiberContent\": 10g,\n        \"SugarContent\": 5g,\n        \"ProteinContent\": 18g\n      },\n      \"Calories\": 350\n    },\n    \"Meal_3\": {\n      \"Food_Items\": [\n        \"Quinoa bowl with roasted vegetables and chickpeas (1/2 cup quinoa, 1 cup roasted vegetables, 1/2 cup chickpeas)\",\n        \"1 cup mixed greens salad with lemon vinaigrette dressing\"\n      ],\n      \"Nutritional_Values\": {\n        \"FatContent\": 10g,\n        \"SaturatedFatContent\": 2g,\n        \"CholesterolContent\": 0mg,\n        \"SodiumContent\": 200mg,\n        \"CarbohydrateContent\": 50g,\n        \"FiberContent\": 12g,\n        \"SugarContent\": 5g,\n        \"ProteinContent\": 20g\n      },\n      \"Calories\": 450\n    }\n  },\n  \"Explanation\": \"This vegetarian diet plan caters to a 20-year-old female, standing at 170 cm, with a BMI of 25.95, falling under the 'Overweight' category. As an individual with 'Moderate Exercise' aiming for 'Weight Loss', a daily calorie intake of 1600 is recommended. This plan consists of three meals, each offering a balanced mix of protein, carbohydrates, and healthy fats. The meals are rich in fiber and essential nutrients, supporting a healthy lifestyle and weight management. It's important to note that these are just examples, and the food choices and portions can be adjusted based on individual needs and preferences. It is crucial to consult a registered dietitian or healthcare professional for personalized advice.\",\n  \"Key Points\": [\n    \"This is just an example, and you may need to adjust the food choices and portion sizes based on your individual preferences and needs.\",\n    \"It's always best to consult with a registered dietitian or healthcare professional for personalized diet recommendations.\"\n  ]\n}",
+        "Correct ::",
+        "{\n  \"BMI\": 25.95,\n  \"BMI_Category\": \"Overweight\",\n  \"Calories_Calculator\": {\n    \"Calorie_Intake_per_day\": 1600\n  },\n  \"Meal_Recommendations\": {\n    \"Meal_1\": {\n      \"Food_Items\": [\n        \"Overnight oats with chia seeds and berries (1/2 cup rolled oats, 1/4 cup chia seeds, 1/2 cup berries, 1/2 cup almond milk)\",\n        \"1 slice whole-wheat toast with avocado (1 slice whole-wheat toast, 1/4 avocado)\"\n      ],\n      \"Nutritional_Values\": {\n        \"FatContent\": \"12g\",\n        \"SaturatedFatContent\": \"3g\",\n        \"CholesterolContent\": \"0mg\",\n        \"SodiumContent\": \"150mg\",\n        \"CarbohydrateContent\": \"40g\",\n        \"FiberContent\": \"8g\",\n        \"SugarContent\": \"10g\",\n        \"ProteinContent\": \"12g\"\n      },\n      \"Calories\": 350\n    },\n    \"Meal_2\": {\n      \"Food_Items\": [\n        \"Lentil soup with whole-wheat bread (1 cup lentil soup, 1 slice whole-wheat bread)\",\n        \"Mixed greens salad with vinaigrette dressing (1 cup mixed greens, 2 tbsp vinaigrette dressing)\"\n      ],\n      \"Nutritional_Values\": {\n        \"FatContent\": \"8g\",\n        \"SaturatedFatContent\": \"1g\",\n        \"CholesterolContent\": \"0mg\",\n        \"SodiumContent\": \"300mg\",\n        \"CarbohydrateContent\": \"45g\",\n        \"FiberContent\": \"10g\",\n        \"SugarContent\": \"5g\",\n        \"ProteinContent\": \"18g\"\n      },\n      \"Calories\": 350\n    },\n    \"Meal_3\": {\n      \"Food_Items\": [\n        \"Quinoa bowl with roasted vegetables and chickpeas (1/2 cup quinoa, 1 cup roasted vegetables, 1/2 cup chickpeas)\",\n        \"1 cup mixed greens salad with lemon vinaigrette dressing\"\n      ],\n      \"Nutritional_Values\": {\n        \"FatContent\": \"10g\",\n        \"SaturatedFatContent\": \"2g\",\n        \"CholesterolContent\": \"0mg\",\n        \"SodiumContent\": \"200mg\",\n        \"CarbohydrateContent\": \"50g\",\n        \"FiberContent\": \"12g\",\n        \"SugarContent\": \"5g\",\n        \"ProteinContent\": \"20g\"\n      },\n      \"Calories\": 450\n    }\n  },\n  \"Explanation\": \"This vegetarian diet plan caters to a 20-year-old female, standing at 170 cm, with a BMI of 25.95, falling under the 'Overweight' category. As an individual with 'Moderate Exercise' aiming for 'Weight Loss', a daily calorie intake of 1600 is recommended. This plan consists of three meals, each offering a balanced mix of protein, carbohydrates, and healthy fats. The meals are rich in fiber and essential nutrients, supporting a healthy lifestyle and weight management. It's important to note that these are just examples, and the food choices and portions can be adjusted based on individual needs and preferences. It is crucial to consult a registered dietitian or healthcare professional for personalized advice.\",\n  \"Key Points\": [\n    \"This is just an example, and you may need to adjust the food choices and portion sizes based on your individual preferences and needs.\",\n    \"It's always best to consult with a registered dietitian or healthcare professional for personalized diet recommendations.\"\n  ]\n}\n",
+      ],
+    },
+    {
+      "role": "model",
+      "parts": [
+        "The JSON you provided is valid.  It's well-structured and follows the rules of JSON syntax. \n\nHowever, you're asking for validation in a specific format, but you haven't actually provided that format. Please provide the format you're looking for, and I can validate the JSON against it. \n\nFor example, if you want to validate that all the \"Nutritional_Values\" values are strings, you can specify that format. \n",
+      ],
+    },
+    {
+      "role": "user",
+      "parts": [
+        "Yes make all Nutritional Values as JSON ",
+      ],
+    },
+  ]
+)
+
+# response2 = chat_session2.send_message(response.text)
+
+# print(response2.text)
+
+import json
+
+# Example response
+def jsonify(response_text):
+  response_text = extract_content_from_response(response_text.text)  # Replace with actual response text
+  # print(response_text)  # Check the content before parsing
+
+  try:
+      json_data = json.loads(response_text)
+      # print(json_data["BMI"])
+      # print(json_data["BMI_Category"])
+  except json.JSONDecodeError as e:
+      print("JSONDecodeError:", e)
+  return json_data
+
+def response_generator(age,weight,height,gender,activity,weight_loss_plan,meals_per_day,diet_type):
     input = f"Age {age} , Weight(kg) {weight} , Height(cm) {height} , Gender {gender} , Activity {activity} , Weight Loss Plan {weight_loss_plan} , Meals Per Day {meals_per_day} , Diet Type {diet_type} new diet"
     response = chat_session.send_message(input)
-    print(response.text + "\n\n\n\n\n\n\n\n")
-    print(extract_content_from_response(response_text = response.text))
-
-input = f"Age {age} , Weight(kg) {weight} , Height(cm) {height} , Gender {gender} , Activity {activity} , Weight Loss Plan {weight_loss_plan} , Meals Per Day {meals_per_day} , Diet Type {diet_type} new diet"
-response = chat_session.send_message(input)
-# print(response.text + "\n\n\n\n\n\n\n\n")
-print(extract_content_from_response(response_text = response.text))
-print(type(response.text))
-response_dict=eval(response.text)
-print(response_dict["Meal_Recommendations"])
+    # print(extract_content_from_response(response_text = response.text))
+    response2 = chat_session2.send_message(response.text)
+    json_data=jsonify(response2)
+    return json_data

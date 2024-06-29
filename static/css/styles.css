@@ -162,3 +162,35 @@ h1 {
   color: #ff5722;
   text-decoration: none;
 }
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.meal {
+  margin-bottom: 20px;
+}
+
+.meal h2 {
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.meal p {
+  margin: 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.explanation h2 {
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.explanation p {
+  margin: 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
