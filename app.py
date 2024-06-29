@@ -151,7 +151,7 @@ def profile():
 
         json_data = diet_recommendation_model.response_generator(age, weight, height, gender, activity, weight_loss_plan, meals_per_day, diet_type)
         print(json_data["BMI"])
-        return render_template('dashboard.html', meal1=json_data["Meal_Recommendations"]["Meal_1"], meal2=json_data["Meal_Recommendations"]["Meal_2"], meal3=json_data["Meal_Recommendations"]["Meal_3"], explanation=json_data["Explanation"])
+        return render_template('dashboard.html', meal1=json_data["Meal_Recommendations"]["Meal_1"]["Food_Items"][0]+json_data["Meal_Recommendations"]["Meal_1"]["Food_Items"][1]+str(json_data["Meal_Recommendations"]["Meal_1"]["Nutritional_Values"]), meal2=json_data["Meal_Recommendations"]["Meal_2"]["Food_Items"][0]+json_data["Meal_Recommendations"]["Meal_2"]["Food_Items"][1]+str(json_data["Meal_Recommendations"]["Meal_2"]["Nutritional_Values"]), meal3=json_data["Meal_Recommendations"]["Meal_3"]["Food_Items"][0]+json_data["Meal_Recommendations"]["Meal_3"]["Food_Items"][1]+str(json_data["Meal_Recommendations"]["Meal_3"]["Nutritional_Values"]), explanation=json_data["Explanation"])
     return render_template('profile.html')
 
 def admin_required(f):
